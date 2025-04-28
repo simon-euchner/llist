@@ -29,12 +29,12 @@ CMPLE=${CC} -O${OL} -fPIC
 LINK=${CC} -O${OL} -lm -shared
 
 ### Run
-all: ${LIB}llist.so
+all: ${LIB}libllist.so
 	@echo "Building library"
 
 ### Link
-${BIN}llist.so: ${OBJ}llist.o
-	${LINK} -fPIC -shared ${OBJ}llist.o -o ${LIB}llist.so -lm
+${LIB}libllist.so: ${OBJ}llist.o
+	${LINK} -fPIC -shared ${OBJ}llist.o -o ${LIB}libllist.so -lm
 
 ### Compile
 

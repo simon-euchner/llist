@@ -30,14 +30,14 @@ llist *llist_empty() {
 }
 
 // Append element
-void llist_append(llist *l, DTYPE x) {
+void llist_append(llist *l, LLIST_DTYPE x) {
     llist_node *new = (llist_node *)malloc(sizeof(llist_node)); l->length++;
     if (l->final) { l->final->next = new; } else { l->first = new; }
     l->final = new; l->final->x = x; l->final->next = NULL;
 }
 
 // Prepend element
-void llist_prepend(llist *l, DTYPE x) {
+void llist_prepend(llist *l, LLIST_DTYPE x) {
     llist_node *new = (llist_node *)malloc(sizeof(llist_node)); l->length++;
     if (l->first) {
         new->next = l->first;
@@ -48,7 +48,7 @@ void llist_prepend(llist *l, DTYPE x) {
 }
 
 // Insert element at given position
-void llist_insert(llist *l, INT position, DTYPE x) {
+void llist_insert(llist *l, LLIST_INT position, LLIST_DTYPE x) {
     if ((!l->first) || (position >= l->length)) {
         llist_append(l, x);
     } else
@@ -62,12 +62,13 @@ void llist_insert(llist *l, INT position, DTYPE x) {
     }
 }
 
-// Print
+// Print llist
 void llist_print(llist *l) {
-    printf("\n---\nLINKED LIST WITH %lu ENTRIE(S)\n\n", (MAXINT)l->length);
+    printf("\n---\nLINKED LIST WITH %lu ENTRIE(S)\n\n",
+           (LLIST_MAXINT)l->length);
     llist_node *n = l->first;
     while (n) {
-        MAXDTYPE x = (MAXDTYPE)n->x; n = n->next;
+        LLIST_MAXDTYPE x = (LLIST_MAXDTYPE)n->x; n = n->next;
         printf("%+1.3E%+1.3E*I\n", creal(x), cimag(x));
     }
     printf("%s\n", "---");
@@ -87,23 +88,25 @@ llist *llist_copy(llist *l) {
 }
 
 // Linked list with *length* entries, all zero
-llist *llist_zeros(INT length) {
+llist *llist_zeros(LLIST_INT length) {
     llist *result = llist_empty();
-    for (INT k=0; k<length; k++) llist_append(result, (DTYPE)0);
+    for (LLIST_INT k=0; k<length; k++) llist_append(result, (LLIST_DTYPE)0);
     return result;
 }
 
 // Linked list with *length* entries, all ones
-llist *llist_ones(INT length) {
+llist *llist_ones(LLIST_INT length) {
     llist *result = llist_empty();
-    for (INT k=0; k<length; k++) llist_append(result, (DTYPE)1);
+    for (LLIST_INT k=0; k<length; k++) llist_append(result, (LLIST_DTYPE)1);
     return result;
 }
 
 // Initialize elements by sequance ai, i=0, ..., length; [a0, a1, a2, ... ]
-llist *llist_fromFunc(void *data, DTYPE (*ai)(void *, INT), INT length) {
+llist *llist_fromFunc(void *data,
+                      LLIST_DTYPE (*ai)(void *, LLIST_INT),
+                      LLIST_INT length) {
     llist *l = llist_empty();
-    for (INT i=0; i<length; i++) llist_append(l, ai(data, i));
+    for (LLIST_INT i=0; i<length; i++) llist_append(l, ai(data, i));
     return l;
 }
 
@@ -139,7 +142,7 @@ void llist_multiply(llist *l1, const llist *l2) {
 }
 
 // Scale; result is saved in l; l = alpha * l
-void llist_scale(DTYPE alpha, llist *l) {
+void llist_scale(LLIST_DTYPE alpha, llist *l) {
     llist_node *n = l->first; while (n) { n->x *= alpha; n = n->next; }
 }
 
@@ -166,7 +169,7 @@ void llist_removeLast(llist *l) {
 }
 
 // Remove element at given position
-void llist_remove(llist *l, INT position) {
+void llist_remove(llist *l, LLIST_INT position) {
     if (l->length <= position) {
         printf("%s\n", "llist: Cannot remove non-existent entry"); exit(1);
     }
@@ -176,45 +179,47 @@ void llist_remove(llist *l, INT position) {
     if (position == l->length-1) {
         llist_removeLast(l);
     } else {
-        llist_node *m, *n = l->first; INT k = 0;
+        llist_node *m, *n = l->first; LLIST_INT k = 0;
         while (k < position-1) { n = n->next; k++; }
         m = n->next->next; free(n->next); n->next = m; l->length--;
     }
 }
 
 // Sum
-DTYPE llist_sum(llist *l) {
-    DTYPE result = (DTYPE)0; llist_node *n = l->first;
+LLIST_DTYPE llist_sum(llist *l) {
+    LLIST_DTYPE result = (LLIST_DTYPE)0; llist_node *n = l->first;
     while (n) { result += n->x; n = n->next; }
     return result;
 }
 
 // Product
-DTYPE llist_product(llist *l) {
-    DTYPE result = (DTYPE)1; llist_node *n = l->first;
+LLIST_DTYPE llist_product(llist *l) {
+    LLIST_DTYPE result = (LLIST_DTYPE)1; llist_node *n = l->first;
     while (n) { result *= n->x; n = n->next; }
     return result;
 }
 
 // Map entries to new ones using an index dependent function
-void llist_map(llist *l, void *data, DTYPE (*fix)(void *, INT, DTYPE)) {
-    llist_node *n = l->first; INT i = 0;
+void llist_map(llist *l,
+               void *data,
+               LLIST_DTYPE (*fix)(void *, LLIST_INT, LLIST_DTYPE)) {
+    llist_node *n = l->first; LLIST_INT i = 0;
     while (n) { n->x = fix(data, i++, n->x); n = n->next; }
 }
 
 // Get entry; if position is to large, last one is returned
-DTYPE llist_get(llist *l, INT position) {
+LLIST_DTYPE llist_get(llist *l, LLIST_INT position) {
     if (!l->length) {
         printf("%s\n", "llist: Cannot get entry from empty list"); exit(1);
     } else {
-        llist_node *n = l->first; INT k = 0;
+        llist_node *n = l->first; LLIST_INT k = 0;
         while (n->next && (k < position)) { n = n->next; k++; };
         return n->x;
     }
 }
 
 // Swap list entries
-void llist_swap(llist *l, INT i, INT j) {
+void llist_swap(llist *l, LLIST_INT i, LLIST_INT j) {
     if ((i >= l->length) || (j >= l->length)) {
         printf("%s\n", "llist: Cannot swap non-existent entries"); exit(1);
     } else
@@ -222,7 +227,7 @@ void llist_swap(llist *l, INT i, INT j) {
     {
         return;
     } else {
-        llist_node *n, *nmin; INT min, max, k = 0; DTYPE xmin;
+        llist_node *n, *nmin; LLIST_INT min, max, k = 0; LLIST_DTYPE xmin;
         if (i < j) min = i; else min = j;
         if (i > j) max = i; else max = j;
         n = l->first;
@@ -232,15 +237,14 @@ void llist_swap(llist *l, INT i, INT j) {
 }
 
 // Split after *i* entries; *left* is returned, *l* is overwritten with *right*
-llist *llist_split(llist *l, INT i) {
+llist *llist_split(llist *l, LLIST_INT i) {
     if (i > l->length) {
-        printf("%s\n", "llist: Cannot split at non-existent position");
-        exit(1);
+        printf("%s\n", "llist: Cannot split at non-existent position"); exit(1);
     }
     llist *m = llist_empty(); if (!i) return m;
     llist_node *ln_prev, *ln, *mn; ln_prev = mn = ln = l->first;
     m->first = mn; ln = ln->next;
-    l->length--; m->length++; INT j = 1;
+    l->length--; m->length++; LLIST_INT j = 1;
     while (j++ < i) {
         mn->next = ln; ln_prev = ln; ln = ln->next; mn = mn->next;
         l->length--; m->length++;
@@ -250,12 +254,12 @@ llist *llist_split(llist *l, INT i) {
 }
 
 // Quick sort; l is destroyed and the sorted list returned
-llist *llist_qsort(llist *l, bool (*cmp)(DTYPE, DTYPE)) {
+llist *llist_qsort(llist *l, bool (*cmp)(LLIST_DTYPE, LLIST_DTYPE)) {
     if (l->length == 0 || l->length == 1) {
         llist *ll = llist_copy(l); llist_destroy(l);
         return ll;
     }
-    DTYPE x; llist *ll, *lg; llist_node *n;
+    LLIST_DTYPE x; llist *ll, *lg; llist_node *n;
     x = llist_get(l, 0); llist_removeFirst(l); n = l->first;
     ll = llist_empty(); lg = llist_empty();
     while (n) {

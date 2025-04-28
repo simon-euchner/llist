@@ -23,13 +23,13 @@
 #include <math.h>
 
 
-DTYPE f(void *, INT);
-void perm(INT, llist *, llist *);
-void print_perm(INT);
-bool cmp(DTYPE, DTYPE);
+LLIST_DTYPE f(void *, LLIST_INT);
+void perm(LLIST_INT, llist *, llist *);
+void print_perm(LLIST_INT);
+bool cmp(LLIST_DTYPE, LLIST_DTYPE);
 
 
-int main(int argc, char **argv)
+LLIST_INT main(LLIST_INT argc, char **argv)
 {
     (void)argc; (void)argv;
 
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     llist_swap(l, 1, 4);
     llist_swap(l, 3, 5);
 
-    // Print messed up list
+    // print messed up list
     llist_print(l);
 
     // Sort it
@@ -56,8 +56,8 @@ int main(int argc, char **argv)
     // Clean up
     llist_destroy(ls);
 
-    // Print permutations of integers 1, ..., N
-    INT N = 3;
+    // PrLLIST_INT permutations of LLIST_INTegers 1, ..., N
+    LLIST_INT N = 3;
     print_perm(N);
 
     return 0;
@@ -65,16 +65,16 @@ int main(int argc, char **argv)
 
 
 // List initializer
-DTYPE f(void *data, INT i) {
+LLIST_DTYPE f(void *data, LLIST_INT i) {
     (void)data;
-    return (DTYPE)(i+1);
+    return (LLIST_DTYPE)(i+1);
 }
 
 // Get permutations of l and save them in ls
-void perm(INT Nfac, llist *l, llist *ls) {
+void perm(LLIST_INT Nfac, llist *l, llist *ls) {
 
-    INT i, j, Nfac_new;
-    DTYPE x;
+    LLIST_INT i, j, Nfac_new;
+    LLIST_DTYPE x;
     llist *m, *ms;
 
     // Trivial cases
@@ -98,8 +98,8 @@ void perm(INT Nfac, llist *l, llist *ls) {
 }
 
 // Print permutations of list [1, 2, ..., N]
-void print_perm(INT N) {
-    INT k, Nfac = (INT)tgamma((double)(N+1));
+void print_perm(LLIST_INT N) {
+    LLIST_INT k, Nfac = (LLIST_INT)tgamma((double)(N+1));
     llist *l = llist_fromFunc(NULL, &f, N);
     llist *ls = (llist *)malloc(Nfac*sizeof(llist));
     perm(Nfac, l, ls);
@@ -108,7 +108,7 @@ void print_perm(INT N) {
 }
 
 // Comparer
-bool cmp(DTYPE x, DTYPE y) {
+bool cmp(LLIST_DTYPE x, LLIST_DTYPE y) {
     if (y < x) {
         return true;
     } else {

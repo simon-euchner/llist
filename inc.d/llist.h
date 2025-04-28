@@ -29,46 +29,48 @@
 #include <complex.h>
 
 // Data types
-typedef uint64_t INT;
-typedef uint64_t MAXINT;
-typedef double DTYPE;
-typedef long double complex MAXDTYPE;
+typedef uint64_t LLIST_INT;
+typedef uint64_t LLIST_MAXINT;
+typedef double LLIST_DTYPE;
+typedef long double complex LLIST_MAXDTYPE;
 
 // Definition of linked lists
 typedef struct LListNode {
-    DTYPE x;
+    LLIST_DTYPE x;
     struct LListNode *next;
 } llist_node;
 typedef struct LList {
-    INT length;
+    LLIST_INT length;
     llist_node *first;
     llist_node *final;
 } llist;
 
 // Methods
 llist *llist_empty();
-void llist_append(llist *, DTYPE);
-void llist_prepend(llist *, DTYPE);
-void llist_insert(llist *, INT, DTYPE);
+void llist_append(llist *, LLIST_DTYPE);
+void llist_prepend(llist *, LLIST_DTYPE);
+void llist_insert(llist *, LLIST_INT, LLIST_DTYPE);
 void llist_print(llist *);
 void llist_destroy(llist*);
 llist *llist_copy(llist *);
-llist *llist_zeros(INT);
-llist *llist_ones(INT);
-llist *llist_fromFunc(void *, DTYPE (*)(void *, INT), INT);
+llist *llist_zeros(LLIST_INT);
+llist *llist_ones(LLIST_INT);
+llist *llist_fromFunc(void *, LLIST_DTYPE (*)(void *, LLIST_INT), LLIST_INT);
 void llist_concatenate(llist *, llist *);
 void llist_add(llist *, const llist *);
 void llist_multiply(llist *, const llist *);
-void llist_scale(DTYPE, llist *);
+void llist_scale(LLIST_DTYPE, llist *);
 void llist_removeFirst(llist *);
 void llist_removeLast(llist *);
-DTYPE llist_sum(llist *);
-DTYPE llist_product(llist *);
-void llist_remove(llist *, INT);
-void llist_map(llist *, void *, DTYPE (*)(void *, INT, DTYPE));
-DTYPE llist_get(llist *, INT);
-void llist_swap(llist *, INT, INT);
-llist *llist_split(llist *, INT);
-llist *llist_qsort(llist *, bool (*)(DTYPE, DTYPE));
+LLIST_DTYPE llist_sum(llist *);
+LLIST_DTYPE llist_product(llist *);
+void llist_remove(llist *, LLIST_INT);
+void llist_map(llist *,
+               void *,
+               LLIST_DTYPE (*)(void *, LLIST_INT, LLIST_DTYPE));
+LLIST_DTYPE llist_get(llist *, LLIST_INT);
+void llist_swap(llist *, LLIST_INT, LLIST_INT);
+llist *llist_split(llist *, LLIST_INT);
+llist *llist_qsort(llist *, bool (*)(LLIST_DTYPE, LLIST_DTYPE));
 
 #endif
