@@ -23,7 +23,8 @@ Description.
     once, just use copy the library, set the data types and rename the functions
     in this libraray such that they do not clash with the functions for the
     other data type. Documentation is given in the comments above the function
-    implementations in *src.d/llist.c*.
+    implementations in *src.d/llist.c*. Alternatively, to compiling with the
+    object file manually, you can also linke against the library *llist.so*.
 
 
 Notes.
